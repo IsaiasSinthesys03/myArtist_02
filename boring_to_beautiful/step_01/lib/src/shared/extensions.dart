@@ -1,12 +1,11 @@
-// Copyright 2022 The Flutter Authors. All rights reserved.
-// Use of this source code is governed by a BSD-style license that can be
-// found in the LICENSE file.
+// lib/src/shared/extensions.dart
 
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 extension TypographyUtils on BuildContext {
   ThemeData get theme => Theme.of(this);
-  TextTheme get textTheme => theme.textTheme;
+  TextTheme get textTheme => GoogleFonts.montserratTextTheme(theme.textTheme);
   ColorScheme get colors => theme.colorScheme;
   TextStyle? get displayLarge =>
       textTheme.displayLarge?.copyWith(color: colors.onSurface);
@@ -49,17 +48,17 @@ extension BreakpointUtils on BoxConstraints {
 extension DurationString on String {
   /// Assumes a string (roughly) of the format '\d{1,2}:\d{2}'
   Duration toDuration() => switch (split(':')) {
-    [var minutes, var seconds] => Duration(
-      minutes: int.parse(minutes.trim()),
-      seconds: int.parse(seconds.trim()),
-    ),
-    [var hours, var minutes, var seconds] => Duration(
-      hours: int.parse(hours.trim()),
-      minutes: int.parse(minutes.trim()),
-      seconds: int.parse(seconds.trim()),
-    ),
-    _ => throw Exception('Invalid duration string: $this'),
-  };
+        [var minutes, var seconds] => Duration(
+            minutes: int.parse(minutes.trim()),
+            seconds: int.parse(seconds.trim()),
+          ),
+        [var hours, var minutes, var seconds] => Duration(
+            hours: int.parse(hours.trim()),
+            minutes: int.parse(minutes.trim()),
+            seconds: int.parse(seconds.trim()),
+          ),
+        _ => throw Exception('Invalid duration string: $this'),
+      };
 }
 
 extension HumanizedDuration on Duration {

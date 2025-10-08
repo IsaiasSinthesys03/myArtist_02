@@ -1,14 +1,12 @@
-// Copyright 2022 The Flutter Authors. All rights reserved.
-// Use of this source code is governed by a BSD-style license that can be
-// found in the LICENSE file.
+// lib/src/features/home/view/home_screen.dart
 
+import 'package:adaptive_components/adaptive_components.dart';
 import 'package:flutter/material.dart';
 
 import '../../../shared/classes/classes.dart';
 import '../../../shared/extensions.dart';
 import '../../../shared/providers/providers.dart';
 import '../../../shared/views/views.dart';
-import '../../../utils/adaptive_components.dart';
 import '../../playlists/view/playlist_songs.dart';
 import 'view.dart';
 
@@ -28,8 +26,64 @@ class _HomeScreenState extends State<HomeScreen> {
     final Playlist newReleases = playlistProvider.newReleases;
     final ArtistsProvider artistsProvider = ArtistsProvider();
     final List<Artist> artists = artistsProvider.artists;
+
     return LayoutBuilder(
       builder: (context, constraints) {
+        // --- ESTA LÓGICA DECIDE QUÉ VISTA MOSTRAR ---
+
+        // SI LA PANTALLA ES MÓVIL, MUESTRA LA VISTA CON PESTAÑAS
+        if (constraints.isMobile) {
+          return DefaultTabController(
+            length: 4,
+            child: Scaffold(
+              appBar: AppBar(
+                centerTitle: false,
+                title: const Text('Good morning'),
+                actions: const [BrightnessToggle()],
+                bottom: const TabBar(
+                  isScrollable: true,
+                  tabs: [
+                    Tab(text: 'Home'),
+                    Tab(text: 'Recently Played'),
+                    Tab(text: 'New Releases'),
+                    Tab(text: 'Top Songs'),
+                  ],
+                ),
+              ),
+              body: LayoutBuilder(
+                builder: (context, constraints) => TabBarView(
+                  children: [
+                    SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          const HomeHighlight(),
+                          HomeArtists(
+                            artists: artists,
+                            constraints: constraints,
+                          ),
+                        ],
+                      ),
+                    ),
+                    HomeRecent(
+                      playlists: playlists,
+                      axis: Axis.vertical,
+                    ),
+                    PlaylistSongs(
+                      playlist: newReleases,
+                      constraints: constraints,
+                    ),
+                    PlaylistSongs(
+                      playlist: topSongs,
+                      constraints: constraints,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
+        }
+
+        // SI NO ES MÓVIL, MUESTRA LA VISTA DE ESCRITORIO
         return Scaffold(
           body: SingleChildScrollView(
             child: AdaptiveColumn(
@@ -37,7 +91,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 AdaptiveContainer(
                   columnSpan: 12,
                   child: Padding(
-                    padding: const EdgeInsets.all(2),
+                    padding: const EdgeInsets.fromLTRB(20, 25, 20, 10),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -73,20 +127,25 @@ class _HomeScreenState extends State<HomeScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Padding(
-                        padding: const EdgeInsets.all(2),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 15,
+                          vertical: 10,
+                        ),
                         child: Text(
                           'Recently played',
                           style: context.headlineSmall,
                         ),
                       ),
-                      HomeRecent(playlists: playlists),
+                      HomeRecent(
+                        playlists: playlists,
+                      ),
                     ],
                   ),
                 ),
                 AdaptiveContainer(
                   columnSpan: 12,
                   child: Padding(
-                    padding: const EdgeInsets.all(2),
+                    padding: const EdgeInsets.all(15),
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -97,7 +156,8 @@ class _HomeScreenState extends State<HomeScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Padding(
-                                padding: const EdgeInsets.all(2),
+                                padding:
+                                    const EdgeInsets.only(left: 8, bottom: 8),
                                 child: Text(
                                   'Top Songs Today',
                                   style: context.titleLarge,
@@ -106,13 +166,14 @@ class _HomeScreenState extends State<HomeScreen> {
                               LayoutBuilder(
                                 builder: (context, constraints) =>
                                     PlaylistSongs(
-                                      playlist: topSongs,
-                                      constraints: constraints,
-                                    ),
+                                  playlist: topSongs,
+                                  constraints: constraints,
+                                ),
                               ),
                             ],
                           ),
                         ),
+                        const SizedBox(width: 25),
                         Flexible(
                           flex: 10,
                           child: Column(
@@ -120,7 +181,8 @@ class _HomeScreenState extends State<HomeScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Padding(
-                                padding: const EdgeInsets.all(2),
+                                padding:
+                                    const EdgeInsets.only(left: 8, bottom: 8),
                                 child: Text(
                                   'New Releases',
                                   style: context.titleLarge,
@@ -129,9 +191,9 @@ class _HomeScreenState extends State<HomeScreen> {
                               LayoutBuilder(
                                 builder: (context, constraints) =>
                                     PlaylistSongs(
-                                      playlist: newReleases,
-                                      constraints: constraints,
-                                    ),
+                                  playlist: newReleases,
+                                  constraints: constraints,
+                                ),
                               ),
                             ],
                           ),

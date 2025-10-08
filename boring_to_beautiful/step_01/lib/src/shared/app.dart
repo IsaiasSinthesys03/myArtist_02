@@ -1,9 +1,7 @@
-// Copyright 2022 The Flutter Authors. All rights reserved.
-// Use of this source code is governed by a BSD-style license that can be
-// found in the LICENSE file.
+// lib/src/shared/app.dart
 
 import 'package:dynamic_color/dynamic_color.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart'; // <-- ESTA ES LA LÍNEA QUE FALTABA
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'playback/bloc/bloc.dart';
@@ -20,8 +18,12 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   final settings = ValueNotifier(
-    ThemeSettings(sourceColor: Colors.pink, themeMode: ThemeMode.system),
+    ThemeSettings(
+      sourceColor: const Color(0xff00cbe6),
+      themeMode: ThemeMode.system,
+    ),
   );
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider<PlaybackBloc>(
@@ -39,9 +41,14 @@ class _MyAppState extends State<MyApp> {
             child: ValueListenableBuilder<ThemeSettings>(
               valueListenable: settings,
               builder: (context, value, _) {
+                final theme = ThemeProvider.of(context);
+
                 return MaterialApp.router(
                   debugShowCheckedModeBanner: false,
                   title: 'Flutter Demo',
+                  theme: theme.light(settings.value.sourceColor),
+                  darkTheme: theme.dark(settings.value.sourceColor),
+                  themeMode: theme.themeMode(),
                   routeInformationParser: appRouter.routeInformationParser,
                   routeInformationProvider: appRouter.routeInformationProvider,
                   routerDelegate: appRouter.routerDelegate,

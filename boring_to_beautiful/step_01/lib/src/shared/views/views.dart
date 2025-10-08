@@ -12,6 +12,7 @@ export 'events.dart';
 export 'hover_toggle.dart';
 export 'hoverable_song_play_button.dart';
 export 'image_card.dart';
+export 'image_clipper.dart';
 export 'image_tile.dart';
 export 'play_pause_listener.dart';
 export 'root_layout.dart';

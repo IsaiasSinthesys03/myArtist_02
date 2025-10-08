@@ -6,10 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../shared/classes/classes.dart';
+import '../../../shared/views/views.dart';
 import '../../../shared/extensions.dart';
 import '../../../shared/playback/bloc/bloc.dart';
-import '../../../shared/views/image_clipper.dart';
-import '../../../shared/views/views.dart';
 
 class PlaylistSongs extends StatelessWidget {
   const PlaylistSongs({
@@ -28,7 +27,8 @@ class PlaylistSongs extends StatelessWidget {
       breakpoint: 450,
       columns: const [
         DataColumn(
-          label: Padding(padding: EdgeInsets.only(left: 20), child: Text('#')),
+          label:
+              Padding(padding: EdgeInsets.only(left: 20), child: Text('#')),
         ),
         DataColumn(label: Text('Title')),
         DataColumn(
@@ -38,12 +38,16 @@ class PlaylistSongs extends StatelessWidget {
           ),
         ),
       ],
-      rowBuilder: (context, index) => DataRow.byIndex(
+      rowBuilder: (song, index) => DataRow.byIndex(
         index: index,
         cells: [
           DataCell(
-            Center(
-              child: Text((index + 1).toString(), textAlign: TextAlign.center),
+            HoverableSongPlayButton(
+              hoverMode: HoverMode.overlay,
+              song: song,
+              child: const Center(
+                child: Text('#', textAlign: TextAlign.center),
+              ),
             ),
           ),
           DataCell(
@@ -51,14 +55,18 @@ class PlaylistSongs extends StatelessWidget {
               children: [
                 Padding(
                   padding: const EdgeInsets.all(2),
-                  child: ClippedImage(playlist.songs[index].image.image),
+                  child: ClippedImage(
+                    song.image.image,
+                    width: 40,
+                    height: 40,
+                  ),
                 ),
                 const SizedBox(width: 10),
-                Expanded(child: Text(playlist.songs[index].title)),
+                Expanded(child: Text(song.title)),
               ],
             ),
           ),
-          DataCell(Text(playlist.songs[index].length.toHumanizedString())),
+          DataCell(Text(song.length.toHumanizedString())),
         ],
       ),
       itemBuilder: (song, index) {
@@ -66,7 +74,11 @@ class PlaylistSongs extends StatelessWidget {
           onTap: () => BlocProvider.of<PlaybackBloc>(
             context,
           ).add(PlaybackEvent.changeSong(song)),
-          leading: ClippedImage(song.image.image),
+          leading: ClippedImage(
+            song.image.image,
+            width: 50,
+            height: 50,
+          ),
           title: Text(song.title),
           subtitle: Text(song.length.toHumanizedString()),
         );

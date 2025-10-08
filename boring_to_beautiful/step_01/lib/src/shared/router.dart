@@ -19,23 +19,25 @@ const _scaffoldKey = ValueKey('_scaffoldKey');
 final artistsProvider = ArtistsProvider();
 final playlistsProvider = PlaylistsProvider();
 
+// --- INICIO DE LA SECCIÓN MODIFICADA ---
 const List<NavigationDestination> destinations = [
   NavigationDestination(
     label: 'Home',
-    icon: Icon(Icons.arrow_right_rounded),
+    icon: Icon(Icons.home), // Icono modificado
     route: '/',
   ),
   NavigationDestination(
     label: 'Playlists',
-    icon: Icon(Icons.arrow_right_rounded),
+    icon: Icon(Icons.playlist_add_check), // Icono modificado
     route: '/playlists',
   ),
   NavigationDestination(
     label: 'Artists',
-    icon: Icon(Icons.arrow_right_rounded),
+    icon: Icon(Icons.people), // Icono modificado
     route: '/artists',
   ),
 ];
+// --- FIN DE LA SECCIÓN MODIFICADA ---
 
 class NavigationDestination {
   const NavigationDestination({

@@ -1,6 +1,4 @@
-// Copyright 2022 The Flutter Authors. All rights reserved.
-// Use of this source code is governed by a BSD-style license that can be
-// found in the LICENSE file.
+// lib/src/shared/views/adaptive_navigation.dart
 
 import 'package:flutter/material.dart';
 
@@ -22,25 +20,35 @@ class AdaptiveNavigation extends StatelessWidget {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, dimens) {
+        // Usa el breakpoint de 730 para decidir
+        if (dimens.maxWidth >= 730) {
+          return Scaffold(
+            body: Row(
+              children: [
+                NavigationRail(
+                  extended: dimens.maxWidth >= 800,
+                  minExtendedWidth: 180,
+                  destinations: destinations
+                      .map((e) => NavigationRailDestination(
+                            icon: e.icon,
+                            label: Text(e.label),
+                          ))
+                      .toList(),
+                  selectedIndex: selectedIndex,
+                  onDestinationSelected: onDestinationSelected,
+                ),
+                Expanded(child: child),
+              ],
+            ),
+          );
+        }
+        // Si no, muestra la barra inferior de móvil
         return Scaffold(
-          body: Row(
-            children: [
-              NavigationRail(
-                extended: dimens.maxWidth >= 800,
-                minExtendedWidth: 180,
-                destinations: destinations
-                    .map(
-                      (e) => NavigationRailDestination(
-                        icon: e.icon,
-                        label: Text(e.label),
-                      ),
-                    )
-                    .toList(),
-                selectedIndex: selectedIndex,
-                onDestinationSelected: onDestinationSelected,
-              ),
-              Expanded(child: child),
-            ],
+          body: child,
+          bottomNavigationBar: NavigationBar(
+            destinations: destinations,
+            selectedIndex: selectedIndex,
+            onDestinationSelected: onDestinationSelected,
           ),
         );
       },

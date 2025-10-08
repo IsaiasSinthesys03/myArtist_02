@@ -61,8 +61,8 @@ class ThemeProvider extends InheritedWidget {
   Color blend(Color targetColor) {
     return Color(
       Blend.harmonize(
-        targetColor.toARGB32(),
-        settings.value.sourceColor.toARGB32(),
+        targetColor.value, // Updated for newer material_color_utilities
+        settings.value.sourceColor.value, // Updated for newer material_color_utilities
       ),
     );
   }
@@ -147,6 +147,7 @@ class ThemeProvider extends InheritedWidget {
   ThemeData light([Color? targetColor]) {
     final colorScheme = colors(Brightness.light, targetColor);
     return ThemeData.light().copyWith(
+      pageTransitionsTheme: pageTransitionsTheme, // <-- LÍNEA AGREGADA
       colorScheme: colorScheme,
       appBarTheme: appBarTheme(colorScheme),
       cardTheme: cardTheme(),
@@ -157,12 +158,14 @@ class ThemeProvider extends InheritedWidget {
       tabBarTheme: tabBarTheme(colorScheme),
       drawerTheme: drawerTheme(colorScheme),
       scaffoldBackgroundColor: colorScheme.surface,
+      useMaterial3: true,
     );
   }
 
   ThemeData dark([Color? targetColor]) {
     final colorScheme = colors(Brightness.dark, targetColor);
     return ThemeData.dark().copyWith(
+      pageTransitionsTheme: pageTransitionsTheme, // <-- LÍNEA AGREGADA
       colorScheme: colorScheme,
       appBarTheme: appBarTheme(colorScheme),
       cardTheme: cardTheme(),
@@ -173,6 +176,7 @@ class ThemeProvider extends InheritedWidget {
       tabBarTheme: tabBarTheme(colorScheme),
       drawerTheme: drawerTheme(colorScheme),
       scaffoldBackgroundColor: colorScheme.surface,
+      useMaterial3: true,
     );
   }
 

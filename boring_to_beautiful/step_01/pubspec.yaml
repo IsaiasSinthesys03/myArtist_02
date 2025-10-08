@@ -21,6 +21,8 @@ dependencies:
   material_color_utilities: any
   universal_platform: ^1.1.0
   url_launcher: ^6.3.2
+  google_fonts: ^6.3.2
+  adaptive_components: ^0.0.10
 
 dev_dependencies:
   flutter_test:
